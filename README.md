@@ -16,7 +16,10 @@ POST http://127.0.0.1:5000/predict
 
 Body JSON:
 {
-  "area": 100,
+  "sqft_living": 2000,
   "bedrooms": 3,
-  "bathrooms": 2
+  "bathrooms": 2,
+  "floors": 2,
+  "condition": 3,
+  "yr_built": 2000
 }
