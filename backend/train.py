@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, r2_score
 import joblib
 
@@ -8,15 +9,16 @@ import joblib
 df = pd.read_csv("data/data.csv")
 
 # Drop kolom yang tidak dipakai
-df = df.drop(columns=[
-    'date', 'street', 'city', 'statezip', 'country'
-])
+
 
 # Bersihkan data
 df = df.dropna()
+df = df[df['price'] > 0]
+df = df[df['price'] < 2000000]
 
 # Feature & target
-X = df[['sqft_living', 'bedrooms', 'bathrooms', 'floors', 'condition', 'yr_built']]
+df['house_age'] = 2024 - df['yr_built']
+X = df[['sqft_living', 'bedrooms', 'bathrooms', 'floors', 'condition', 'house_age']]
 y = df['price']
 
 # Split data
@@ -25,7 +27,11 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Training model
-model = LinearRegression()
+model = RandomForestRegressor(
+    n_estimators=200,
+    max_depth=10,
+    random_state=42
+)
 model.fit(X_train, y_train)
 
 # Prediksi data test
